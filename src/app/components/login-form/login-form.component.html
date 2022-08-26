@@ -1,0 +1,96 @@
+<main class="container">
+  <section class="row">
+    <div class="col-md-3 col-lg-4"></div>
+    <form [formGroup]="login_form" (submit)="login()" errorTailor class="col-sm-12 col-md-6 col-lg-4">
+      <div class="mb-3">
+        <label for="correo" class="form-label">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          id="correo"
+          formControlName="correo"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="contra" class="form-label">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="contra"
+          formControlName="contra"
+          [controlErrorsTpl]="msgContraError"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="youtube" class="form-label">Enlace youtube</label>
+        <input type="text" class="form-control" id="youtube" formControlName="youtube" />
+        <ng-container *ngTemplateOutlet="mensajeErrorYt;context:{error:login_form.get('youtube').errors}"></ng-container>
+      </div>
+      <div class="mb-3">
+        <label  for="select">Tipo</label>
+        <select (change)="changeType()" class="form-control" name="" id="select" formControlName="type">
+          <option value="0" selected>Ninguno</option>
+          <option value="Moto">Moto</option>
+          <option value="Carro">Carro</option>
+        </select>
+      </div>
+      <div *ngIf="login_form.value?.type!=0" class="mb-3">
+        <label for="color" class="form-label">Color</label>
+        <input
+          type="text"
+          class="form-control"
+          id="color"
+          formControlName="color"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="terms" class="form-label">Términos</label>
+        <input type="checkbox" id="terms" formControlName="terms" />
+      </div>
+
+      <div>Válido: {{ login_form.valid }}</div>
+      <button [disabled]="login_form.invalid" class="btn btn-primary form-control">
+        Enviar
+      </button>
+    </form>
+    <div class="col-md-3 col-lg-4"></div>
+  </section>
+
+  <section class="row">
+    <div class="col-md-3 col-lg-4"></div>
+    <div class="col-sm-12 col-md-6 col-lg-4">
+      <button class="btn btn-danger form-control" (click)="loadApi()">
+        Precargar
+      </button>
+    </div>
+    <div class="col-md-3 col-lg-4"></div>
+  </section>
+</main>
+
+
+
+
+
+<!-- para un dato en especifico, es mas elaborado pero solo se puede con validaciones básicas-->
+<ng-template let-error let-text="text" #msgContraError>
+  {{ error | json }} {{ text }} <br /><b>Error:</b>
+  <div *ngIf="error?.required">{{ text }}</div>
+  <div *ngIf="error?.minlength">
+    <i
+      >Mínimo de caracteres {{ error?.minlength.requiredLength }}, sólo has
+      ingresado {{ error?.minlength.actualLength }}</i
+    >
+  </div>
+</ng-template>
+
+<!-- validaciones predefinidas -->
+<ng-template let-error let-text="text" #mensajeError>{{error|json}} {{text}}</ng-template>
+
+<!-- para un dato en especifico, un poco mas avanzado -->
+<ng-template  #mensajeErrorYt let-error="error">
+  <!-- {{error|json}} -->
+  <!-- <div *ngIf="error?.required">El dato es requerido</div> -->
+  <div *ngIf="error?.pattern?.requiredPattern">Url no válida</div>
+
+</ng-template>
+
